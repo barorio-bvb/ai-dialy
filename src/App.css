@@ -1,0 +1,462 @@
+/* ===== App.css：画面固有のスタイル（ダークテーマ） =====
+   共通の見た目（カード・入力欄・ボタン）は index.css 側。
+   ここでは配置・補助パーツ・ボタンのバリエーション・カレンダーの装飾を定義する */
+
+   .diary-app {
+    display: grid;
+    text-align: left;
+  }
+  
+  /* ---------- ヘッダー ---------- */
+  .app-header {
+    margin-bottom: 1.75rem;
+  }
+  
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.75rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: rgb(124 92 255 / 0.18);
+    border: 1px solid rgb(196 181 253 / 0.35);
+    color: #e8ddff;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+  }
+  
+  .badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #c4b5fd;
+    animation: pulse 1.8s ease-out infinite;
+  }
+  
+  .diary-app h1 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(2.25rem, 6vw, 3.5rem);
+    letter-spacing: -0.04em;
+  }
+  
+  .diary-app h2 {
+    margin: 0;
+    font-size: 1.4rem;
+  }
+  
+  .lede {
+    margin: 0;
+    max-width: 34em;
+    line-height: 1.7;
+    color: #d9d0c3;
+  }
+  
+  /* ---------- 入力フォーム ---------- */
+  .composer {
+    display: grid;
+    gap: 0.75rem;
+  }
+  
+  .field-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: #e8ddff;
+  }
+  
+  .diary-app textarea {
+    resize: vertical;
+    line-height: 1.65;
+  }
+  
+  /* 文字数超過のとき */
+  .diary-app textarea.is-invalid {
+    border-color: #fb7185;
+    background-color: rgb(251 113 133 / 0.08);
+  }
+  
+  .diary-app textarea.is-invalid:focus {
+    outline-color: #fb7185;
+  }
+  
+  .field-footer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: -0.25rem;
+  }
+  
+  .char-count {
+    margin-left: auto;
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    color: #b7ad9f;
+  }
+  
+  .char-count.over {
+    color: #fb7185;
+    font-weight: 700;
+  }
+  
+  .warning-text {
+    margin: 0;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #fb7185;
+  }
+  
+  /* ---------- ファイル入力・プレビュー ---------- */
+  .diary-app .file-input {
+    padding: 0.6rem 0.75rem;
+    cursor: pointer;
+  }
+  
+  .preview-image,
+  .entry-image img {
+    display: block;
+    width: 100%;
+    max-height: 320px;
+    object-fit: cover;
+    border-radius: 18px;
+  }
+  
+  .entry-image {
+    margin-top: 0.75rem;
+  }
+  
+  /* ---------- ボタンのバリエーション ----------
+     基本の button（index.css）は紫→ミントの塗りつぶし。
+     副ボタンは半透明のグラデーション＋細い枠線にする */
+  .btn-primary {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  
+  .btn-secondary {
+    color: #f5f3ff;
+    background: linear-gradient(90deg, rgb(124 92 255 / 0.25), rgb(45 212 191 / 0.18));
+    box-shadow: inset 0 0 0 1px rgb(196 181 253 / 0.35);
+  }
+  
+  .btn-generate {
+    justify-self: start;
+  }
+  
+  .btn-small {
+    justify-self: start;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+  
+  /* ---------- AI生成中・通知 ---------- */
+  .ai-loading {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 14px;
+    background: rgb(124 92 255 / 0.12);
+    color: #ddd6fe;
+    font-size: 0.9rem;
+  }
+  
+  .spark {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #5eead4;
+    animation: pulse 1s ease-in-out infinite;
+  }
+  
+  .notice,
+  .muted {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #c4b5fd;
+  }
+  
+  /* ---------- タイムライン ---------- */
+  .timeline {
+    margin-top: 0.5rem;
+  }
+  
+  .timeline-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .timeline-head p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #cfc6b8;
+  }
+  
+  /* ツールバー（.control-panel を土台に、横並びに） */
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+    padding: 1.1rem 1.5rem;
+  }
+  
+  .toolbar-field {
+    display: grid;
+    gap: 0.4rem;
+    min-width: 160px;
+  }
+  
+  .toolbar-date {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .toolbar-date .react-datepicker-wrapper {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .toolbar-clear {
+    white-space: nowrap;
+  }
+  
+  .toolbar-summary {
+    align-self: center;
+    margin: 0 0 0 auto;
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+    color: #b7ad9f;
+  }
+  
+  .empty-state {
+    text-align: center;
+    color: #cfc6b8;
+  }
+  
+  .empty-state p {
+    margin: 0 0 0.75rem;
+  }
+  
+  /* 日記カードの中身（.diary-card は index.css） */
+  .entry-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .entry-date {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: #a78bfa;
+  }
+  
+  .entry-body {
+    margin: 0 0 0.9rem;
+    font-family: 'Iowan Old Style', 'Yu Mincho', 'Hiragino Mincho ProN', serif;
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: #fffaf3;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  
+  .ai-comment {
+    margin: 0;
+    padding: 0.7rem 0.9rem;
+    border-left: 3px solid #5eead4;
+    border-radius: 0 12px 12px 0;
+    background: rgb(94 234 212 / 0.08);
+    color: #d1fae5;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  
+  .ai-comment span {
+    display: block;
+    margin-bottom: 0.2rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: #5eead4;
+  }
+  
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgb(196 181 253 / 0.6);
+      transform: scale(1);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgb(196 181 253 / 0);
+      transform: scale(1.05);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgb(196 181 253 / 0);
+      transform: scale(1);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .control-panel {
+      padding: 1.1rem;
+    }
+  
+    .toolbar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .toolbar-summary {
+      margin-left: 0;
+    }
+  
+    .entry-body {
+      font-size: 1.1rem;
+    }
+  }
+  
+  /* ---------- react-datepicker（ポップアップカレンダー）のダーク配色 ----------
+     ※ index.css の `button` スタイル（グラデーションの丸ボタン）が
+        カレンダー内の前月/次月ボタンにも当たるため、ここで打ち消している */
+  .react-datepicker-popper {
+    z-index: 20;
+  }
+  
+  .react-datepicker.diary-calendar {
+    font-family: inherit;
+    background: #1c1829;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 18px;
+    box-shadow: 0 20px 45px rgb(0 0 0 / 0.5);
+    overflow: hidden;
+  }
+  
+  .diary-calendar .react-datepicker__month-container {
+    padding: 0.25rem 0.25rem 0.5rem;
+  }
+  
+  .diary-calendar .react-datepicker__header {
+    background: transparent;
+    border-bottom: none;
+    padding-top: 0.75rem;
+  }
+  
+  .diary-calendar .react-datepicker__current-month {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fffaf3;
+  }
+  
+  .diary-calendar .react-datepicker__day-name {
+    color: #a78bfa;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  
+  .diary-calendar .react-datepicker__day {
+    width: 2.1rem;
+    line-height: 2.1rem;
+    margin: 0.1rem;
+    border-radius: 50%;
+    color: #f4efe6;
+    transition: background-color 0.15s, color 0.15s;
+  }
+  
+  .diary-calendar .react-datepicker__day:hover {
+    background: rgb(124 92 255 / 0.3);
+    border-radius: 50%;
+  }
+  
+  .diary-calendar .react-datepicker__day--today {
+    font-weight: 700;
+    color: #5eead4;
+  }
+  
+  .diary-calendar .react-datepicker__day--outside-month {
+    color: #5f566f;
+  }
+  
+  .diary-calendar .react-datepicker__day--keyboard-selected {
+    background: rgb(124 92 255 / 0.25);
+    color: #fffaf3;
+  }
+  
+  .diary-calendar .react-datepicker__day--selected,
+  .diary-calendar .react-datepicker__day--selected:hover {
+    background: #7c5cff;
+    color: #ffffff;
+    font-weight: 700;
+  }
+  
+  /* 前月 / 次月ボタン：グローバル button スタイルを無効化 */
+  .diary-calendar .react-datepicker__navigation,
+  .diary-calendar .react-datepicker__navigation:hover:not(:disabled) {
+    background: none;
+    padding: 0;
+    transform: none;
+    filter: none;
+    box-shadow: none;
+  }
+  
+  .diary-calendar .react-datepicker__navigation {
+    top: 0.6rem;
+  }
+  
+  .diary-calendar .react-datepicker__navigation-icon::before {
+    border-color: #c4b5fd;
+  }
+  
+  .diary-calendar .react-datepicker__navigation:hover .react-datepicker__navigation-icon::before {
+    border-color: #5eead4;
+  }
+  
+  /* ---------- 日記の削除（選択モード） ---------- */
+  .select-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+  
+  .btn-danger {
+    color: #ffffff;
+    background: linear-gradient(90deg, #fb7185, #f43f5e);
+  }
+  
+  .entry-select {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+  }
+  
+  .entry-select .entry-date {
+    margin-bottom: 0;
+  }
+  
+  .entry-checkbox {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0;
+    accent-color: #fb7185;
+    cursor: pointer;
+  }
+  
+  /* 選択された日記（削除対象）を赤みのある枠で強調 */
+  .diary-card.is-selected {
+    border-color: rgb(251 113 133 / 0.55);
+    border-left-color: #fb7185;
+    background: linear-gradient(180deg, rgb(44 24 38 / 0.92), rgb(24 14 22 / 0.88));
+  }
+  

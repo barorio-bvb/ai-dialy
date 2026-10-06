@@ -1,0 +1,138 @@
+/* ===== index.css：アプリ全体の共通スタイル（ダークテーマ） =====
+   ここには「全画面で共通の見た目」だけを置く：
+   ベース / 見出し / フォーム部品 / ボタン / .control-panel / .diary-card
+   画面固有のレイアウトや補助パーツは App.css 側に置く */
+
+   :root {
+    font-family: 'Hiragino Sans', 'Yu Gothic', 'Segoe UI', sans-serif;
+    color: #f4efe6;
+    color-scheme: dark; /* スクロールバーやフォーム部品の標準UIもダークに */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    /* 紫とミントのぼかし光（背景に固定） */
+    background:
+      radial-gradient(900px 520px at 85% -8%, rgb(124 92 255 / 0.32), transparent 60%),
+      radial-gradient(800px 480px at 0% 100%, rgb(45 212 191 / 0.18), transparent 55%),
+      #100e18;
+    background-attachment: fixed;
+  }
+  
+  #root {
+    width: 100%;
+    max-width: 720px; /* 読みやすい横幅に固定 */
+    margin: 0 auto;
+    padding: 3rem 1rem 5rem;
+    box-sizing: border-box;
+  }
+  
+  /* ---------- 見出し ---------- */
+  h1,
+  h2 {
+    font-family: 'Iowan Old Style', 'Yu Mincho', 'Hiragino Mincho ProN', serif;
+    font-weight: 600;
+    color: #fffaf3;
+  }
+  
+  /* ---------- カード（フォーム・ツールバー・日記） ---------- */
+  .control-panel,
+  .diary-card {
+    background: linear-gradient(180deg, rgb(28 24 41 / 0.92), rgb(16 14 24 / 0.88));
+    border: 1px solid rgb(255 255 255 / 0.08);
+    border-radius: 24px;
+    box-shadow: 0 24px 60px rgb(0 0 0 / 0.28);
+    backdrop-filter: blur(16px);
+    box-sizing: border-box;
+  }
+  
+  .control-panel {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .diary-card {
+    padding: 1.4rem 1.5rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #a78bfa; /* アクセントライン */
+    text-align: left;
+  }
+  
+  /* ---------- 入力ボックス ---------- */
+  input[type='text'],
+  input[type='file'],
+  textarea,
+  select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font: inherit;
+    font-size: 0.95rem;
+    color: #fffaf3;
+    background-color: rgb(255 255 255 / 0.04);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  input[type='text']:focus,
+  input[type='file']:focus,
+  textarea:focus,
+  select:focus {
+    outline: 2px solid #a78bfa;
+    outline-offset: 2px;
+  }
+  
+  ::placeholder {
+    color: #8d849c;
+    opacity: 1;
+  }
+  
+  select option {
+    background: #1c1829;
+    color: #fffaf3;
+  }
+  
+  /* ファイル選択ボタン（「ファイルを選択」部分） */
+  input[type='file']::file-selector-button {
+    margin-right: 0.9rem;
+    padding: 0.45rem 1rem;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #f5f3ff;
+    background: linear-gradient(90deg, rgb(124 92 255 / 0.25), rgb(45 212 191 / 0.18));
+    border: 0;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px rgb(196 181 253 / 0.35);
+    cursor: pointer;
+  }
+  
+  /* ---------- ボタン（基本＝紫→ミントのグラデーション） ---------- */
+  button {
+    padding: 0.75rem 1.4rem;
+    font: inherit;
+    font-weight: 700;
+    color: #120f1a;
+    background: linear-gradient(90deg, #7c5cff, #5eead4);
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease, filter 0.15s ease;
+  }
+  
+  button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+  }
+  
+  button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  
