@@ -302,7 +302,7 @@ function App() {
         imageUrl,
         aiComment: pickRandom(AI_COMMENTS),
         createdAt: new Date().toISOString(),
-      } as Schema['Todo']['createType']);
+      } as any);
 
       if (errors?.length) {
         throw new Error(errors.map((error) => error.message).join(', '));
