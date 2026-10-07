@@ -229,7 +229,11 @@ function App() {
       }
       // 再取得せず、保存できた内容でその場の一覧を更新する
       const saved = data?.content ?? newContent;
-      setEntries((prev) => prev.map((item) => (item.id === entry.id ? { ...item, content: saved } : item)));
+      // Diary 型にインデックスシグネチャ（[x: string]: string[]）が含まれ、スプレッドで作ったオブジェクトが
+      // 型の整合性チェックに通らないため、Diary として扱う旨を明示している
+      setEntries((prev) =>
+        prev.map((item) => (item.id === entry.id ? ({ ...item, content: saved } as Diary) : item)),
+      );
       setEditingId(null);
       setEditText('');
     } catch (error) {
