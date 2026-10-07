@@ -1,75 +1,55 @@
-# React + TypeScript + Vite
+# 💡 AIアシスタント機能付き・一行日記アプリ（ダークテーマ）
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Vite + React + TypeScript と AWS Amplify Gen 2 を活用し、フロントエンド・バックエンド・クラウドインフラ・AI連携を完全一気通貫で構築した、フルスタックなCRUD（データ操作）アプリケーションです。
 
-Currently, two official plugins are available:
+- **🚀 本番公開URL:** [https://amplifyapp.com](https://amplifyapp.com)
+- **📁 GitHubリポジトリ:** [https://github.com](https://github.com)
+- **⏱️ 開発期間:** 1日（約8時間）
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🎯 応募歓迎要件に対する本プロジェクトでの成果・アプローチ
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1. Reactなどを使ったフロントエンドの開発経験
+- **型安全なSPA開発:** React + TypeScript（Vite）を採用し、コンポーネント指向でのUI構築と型安全性を徹底。
+- **入力バリデーション ＆ UX:** 「出来事メモ（最大500文字）」および「日記本文（最大140文字）」の文字数制限カウンターをリアルタイム実装。条件を満たさない場合は投稿ボタンを非活性化するロジックを担保。
+- **高度な外部ライブラリ連携:** 標準のHTML要素に依存せず、世界的なカレンダーライブラリ `react-datepicker` を導入し、独自の年月日一致フィルタリングロジック（Read）を構築。
+- **データソート:** タイムラインの「新しい順」「古い順」をクライアントサイドで高速かつ柔軟に切り替えるソートロジックを実装。
+- **ピュアCSSテーマ設計:** 外部のCSSフレームワークに依存せず、ネオンブルーが映えるスタイリッシュな「SF風ダークテーマ」のUIデザインをカスタムCSSのみで完全再現。
 
-## Expanding the ESLint configuration
+### 2. Spring Frameworkなどを想定したバックエンド ＆ AWS環境でのインフラ構築経験（完全なCRUDに対応）
+- **コードファーストなインフラ管理（IaC）:** **AWS Amplify Gen 2** を選定し、バックエンドインフラをすべてTypeScriptコード（`resource.ts`）で定義・自動生成。
+- **完全フルスタックなCRUD操作の実装:** AWS AppSync（GraphQL API）を経由し、NoSQLデータベース **Amazon DynamoDB** に対するデータの**作成（Create：日記の投稿）**・**読み込み（Read：一覧表示・日付検索）**・**更新（Update：投稿後の日記本文インライン編集）**・**削除（Delete：不要になった日記の即時削除）**のすべてのデータ操作サイクルを一気通貫で完結。
+- **データベース最適化:** カレンダーによる特定日付のクエリ検索や並び替え処理を高速化・最適化するため、`createdAt`（作成日時）に対して**セカンダリインデックス（GSI）**をコード側から明示的に設計・付与。
+- **クラウドストレージ連携:** **Amazon S3（Amplify Storage）** と連携し、日記への画像アップロードおよびタイムラインへのセキュアなリアルタイム画像レンダリング（`<StorageImage />`）を実装。
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 3. AIアシスタントを用いた開発工程における生産性向上 ＆ トラブルシューティング実務経験
+- **設計〜テストのAI高速セルフマネジメント:** AIエディタ **Cursor** および **Claude** を開発パートナーとして全面導入。要件定義の構造化、DBスキーマのベース生成、定型ロジックの自動補完に留まらず、境界値（140文字/500文字制限）を網羅したテストケースの設計までをAI主導で実施。
+- **AI連携のモックアップ化:** 1日での超高速リリースを可能にするため、Claude APIとの連動を想定した「3秒間の非同期ローディング演出」と「感情に合わせたポジティブなAI褒め言葉のランダム自動生成ロジック」をフロントエンドに実装。
+- **厳格なコンパイルによる技術的負債の解消:** 開発途中に発生したコンポーネント階層の描画ズレに伴うカレンダー表示バグに対し、`tsconfig.app.json` 内で **`"strict": true`** を指定。静的解析・型チェックをさらに厳格化することでコードの不整合を根本から洗い出し、高品質なバグのセルフ解決を達成。
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 4. リーダー・サブリーダー ＆ メンバー育成視点への共通性
+- AIアシスタントへ明確な前提条件（技術スタック、バリデーション仕様、データ型構造）を与え、出力されたコードの脆弱性をレビュー・修正していく一連のプロセスを**「実務におけるジュニアエンジニアへの迷いのないタスク切り出し・指示出し・コードレビュー（テックリード/サブリーダーとしての動き）」**の言語化訓練として定義。個人開発でありながら、実務のチーム開発を見据えたプロセス管理を遂行しました。
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🛠️ 技術スタック一覧
 
-```
+- **Frontend:** React 18 / TypeScript / Vite / react-datepicker
+- **Backend/Infrastructure (AWS):** AWS Amplify Gen 2 / AWS AppSync (GraphQL) / Amazon DynamoDB / Amazon S3 (Storage)
+- **AI Assistant:** Cursor / Claude 3.5 Sonnet
+- **Version Control:** Git / GitHub
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🧪 実装済みテストケース（AI設計）
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+1. **AI生成プロセス正常系テスト:** 出来事メモ入力 ➔ 生成ボタン押下 ➔ 3秒間のローディング演出 ➔ 日記本文の自動セットが正常に行われること。
+2. **文字数境界値バリデーションテスト:** 
+   - 出来事メモが500文字、日記本文が140文字ぴったり ➔ 投稿可能（活性）。
+   - 制限文字数を1文字でも超過 ➔ 警告文表示、および投稿ボタンが非活性（disabled）になること。
+3. **完全フルスタックCRUD/AWS連携テスト:** 
+   - **C (Create):** 日記・AIコメント・アップロード画像がDynamoDB/S3へ即時保存されること。
+   - **R (Read):** タイムラインのソート、およびカレンダー選択による該当日の日記抽出フィルターがエラーなく動作すること。
+   - **U (Update):** タイムライン上の各カードで「編集」 ➔ インライン修正 ➔ 「保存」を行い、DynamoDBのデータが書き換わり画面にリアルタイム反映されること。
+   - **D (Delete):** 任意のカードで「削除」を実行した際、DynamoDBから物理削除され、タイムライン上からエラーなく即時消去されること。
