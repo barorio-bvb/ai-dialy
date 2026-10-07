@@ -43,6 +43,8 @@
   /* ---------- カード（フォーム・ツールバー・日記） ---------- */
   .control-panel,
   .diary-card {
+    position: relative;          /* 💡 重なり順をコントロールできるように設定 */
+    z-index: 1;                  /* 💡 カードのレイヤーを低い位置（1）に固定 */
     background: linear-gradient(180deg, rgb(28 24 41 / 0.92), rgb(16 14 24 / 0.88));
     border: 1px solid rgb(255 255 255 / 0.08);
     border-radius: 24px;

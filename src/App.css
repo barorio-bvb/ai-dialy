@@ -206,6 +206,7 @@
     gap: 1rem 1.25rem;
     margin-bottom: 1.25rem;
     padding: 1.1rem 1.5rem;
+    z-index: 10; /* タイムラインエリア（下のカード群）より上に配置 */
   }
   
   .toolbar-field {
@@ -328,7 +329,7 @@
      ※ index.css の `button` スタイル（グラデーションの丸ボタン）が
         カレンダー内の前月/次月ボタンにも当たるため、ここで打ち消している */
   .react-datepicker-popper {
-    z-index: 20;
+    position: absolute;
   }
   
   .react-datepicker.diary-calendar {
@@ -458,5 +459,74 @@
     border-color: rgb(251 113 133 / 0.55);
     border-left-color: #fb7185;
     background: linear-gradient(180deg, rgb(44 24 38 / 0.92), rgb(24 14 22 / 0.88));
+  }
+  
+  /* ---------- 日記の編集（インライン） ---------- */
+  .entry-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .entry-head .entry-date,
+  .entry-head .entry-select {
+    margin-bottom: 0;
+  }
+  
+  .btn-edit {
+    padding: 0.3rem 0.9rem;
+    font-size: 0.8rem;
+  }
+  
+  .entry-edit {
+    display: grid;
+    gap: 0.6rem;
+    margin-bottom: 0.9rem;
+  }
+  
+  .entry-edit textarea {
+    font-family: 'Iowan Old Style', 'Yu Mincho', 'Hiragino Mincho ProN', serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+  
+  .entry-edit .field-footer {
+    margin-top: 0;
+  }
+  
+  .edit-hint {
+    font-size: 0.78rem;
+    color: #8d849c;
+  }
+  
+  .entry-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+  }
+  
+  .btn-save {
+    min-width: 6.5rem;
+  }
+  
+  /* 編集中のカードは、左のラインをミント色にして区別する */
+  .diary-card.is-editing {
+    border-left-color: #5eead4;
+  }
+  
+  /* 画面には出さず、スクリーンリーダーにだけ読ませるラベル */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
   

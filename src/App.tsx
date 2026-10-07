@@ -130,6 +130,12 @@ function App() {
   const [deleting, setDeleting] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
 
+  // 本文の編集（同時に編集できるのは1件だけ）
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState('');
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
+
   const memoLength = rawMemo.length;
   const memoOver = memoLength > MAX_MEMO_CHARS; // maxLength により通常は発生しない（念のための保険）
   const memoAtLimit = memoLength >= MAX_MEMO_CHARS;
@@ -186,6 +192,53 @@ function App() {
       return sortOrder === 'desc' ? bTime - aTime : aTime - bTime;
     });
   }, [entries, filterDate, sortOrder]);
+
+  const editOver = editText.length > MAX_CHARS;
+  const canSaveEdit = editText.trim().length > 0 && !editOver && !savingEdit;
+
+  const startEdit = (entry: Diary) => {
+    if (savingEdit) return;
+    setEditingId(entry.id);
+    setEditText(entry.content ?? '');
+    setEditError(null);
+    setDeleteMessage(null);
+  };
+
+  const cancelEdit = () => {
+    if (savingEdit) return;
+    setEditingId(null);
+    setEditText('');
+    setEditError(null);
+  };
+
+  const handleSaveEdit = async (entry: Diary) => {
+    const newContent = editText.trim();
+    if (!canSaveEdit) return;
+    // 変更がなければ通信せずに閉じる
+    if (newContent === (entry.content ?? '')) {
+      cancelEdit();
+      return;
+    }
+
+    setSavingEdit(true);
+    setEditError(null);
+    try {
+      const { data, errors } = await client.models.Todo.update({ id: entry.id, content: newContent });
+      if (errors?.length) {
+        throw new Error(errors.map((error) => error.message).join(', '));
+      }
+      // 再取得せず、保存できた内容でその場の一覧を更新する
+      const saved = data?.content ?? newContent;
+      setEntries((prev) => prev.map((item) => (item.id === entry.id ? { ...item, content: saved } : item)));
+      setEditingId(null);
+      setEditText('');
+    } catch (error) {
+      console.error(error);
+      setEditError('保存に失敗しました。通信状況を確認して、もう一度お試しください。');
+    } finally {
+      setSavingEdit(false);
+    }
+  };
 
   const selectedCount = selectedIds.size;
   const allVisibleSelected =
@@ -445,7 +498,6 @@ function App() {
       <section className="timeline">
         <div className="timeline-head">
           <h2>タイムライン</h2>
-          <p>{sortOrder === 'desc' ? '新しい順に並びます' : '古い順に並びます'}</p>
         </div>
 
         <div className="control-panel toolbar" role="group" aria-label="タイムラインの操作">
@@ -497,7 +549,13 @@ function App() {
 
         {entries.length > 0 && (
           <div className="select-bar">
-            <button type="button" className="btn-secondary btn-small" onClick={toggleSelectMode} disabled={deleting}>
+            <button
+              type="button"
+              className="btn-secondary btn-small"
+              onClick={toggleSelectMode}
+              disabled={deleting || editingId !== null}
+              title={editingId !== null ? '編集を終えてから選択できます' : undefined}
+            >
               {selectMode ? '選択を終了' : '選択'}
             </button>
             {selectMode && (
@@ -547,23 +605,105 @@ function App() {
         <ul className="entry-list">
           {visibleEntries.map((entry) => {
             const selected = selectedIds.has(entry.id);
+            const isEditing = editingId === entry.id;
             return (
-              <li key={entry.id} className={`diary-card ${selected ? 'is-selected' : ''}`}>
-                {selectMode ? (
-                  <label className="entry-select">
-                    <input
-                      type="checkbox"
-                      className="entry-checkbox"
-                      checked={selected}
-                      onChange={() => toggleSelected(entry.id)}
-                      disabled={deleting}
-                    />
+              <li
+                key={entry.id}
+                className={`diary-card ${selected ? 'is-selected' : ''} ${isEditing ? 'is-editing' : ''}`}
+              >
+                <div className="entry-head">
+                  {selectMode ? (
+                    <label className="entry-select">
+                      <input
+                        type="checkbox"
+                        className="entry-checkbox"
+                        checked={selected}
+                        onChange={() => toggleSelected(entry.id)}
+                        disabled={deleting}
+                      />
+                      <time className="entry-date">{formatDate(entry.createdAt)}</time>
+                    </label>
+                  ) : (
                     <time className="entry-date">{formatDate(entry.createdAt)}</time>
-                  </label>
+                  )}
+                  {!selectMode && !isEditing && (
+                    <button
+                      type="button"
+                      className="btn-secondary btn-small btn-edit"
+                      onClick={() => startEdit(entry)}
+                      disabled={savingEdit}
+                    >
+                      編集
+                    </button>
+                  )}
+                </div>
+
+                {isEditing ? (
+                  <div className="entry-edit">
+                    <label className="sr-only" htmlFor={`edit-${entry.id}`}>
+                      日記本文を編集
+                    </label>
+                    <textarea
+                      id={`edit-${entry.id}`}
+                      className={editOver ? 'is-invalid' : undefined}
+                      value={editText}
+                      onChange={(event) => setEditText(event.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.nativeEvent.isComposing) return;
+                        if (event.key === 'Escape') {
+                          cancelEdit();
+                        } else if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+                          event.preventDefault();
+                          void handleSaveEdit(entry);
+                        }
+                      }}
+                      onFocus={(event) => {
+                        const end = event.currentTarget.value.length;
+                        event.currentTarget.setSelectionRange(end, end);
+                      }}
+                      rows={6}
+                      disabled={savingEdit}
+                      autoFocus
+                    />
+                    <div className="field-footer">
+                      {editOver ? (
+                        <p className="warning-text" role="alert">
+                          {editText.length - MAX_CHARS}文字オーバーしています。{MAX_CHARS}文字以内に収めてください。
+                        </p>
+                      ) : editError ? (
+                        <p className="warning-text" role="alert">
+                          {editError}
+                        </p>
+                      ) : (
+                        <span className="edit-hint">Ctrl + Enter で保存 / Esc でキャンセル</span>
+                      )}
+                      <span className={`char-count ${editOver ? 'over' : ''}`}>
+                        {editText.length} / {MAX_CHARS}
+                      </span>
+                    </div>
+                    <div className="entry-actions">
+                      <button
+                        type="button"
+                        className="btn-secondary btn-small"
+                        onClick={cancelEdit}
+                        disabled={savingEdit}
+                      >
+                        キャンセル
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-small btn-save"
+                        onClick={() => void handleSaveEdit(entry)}
+                        disabled={!canSaveEdit}
+                      >
+                        {savingEdit ? '保存しています...' : '保存'}
+                      </button>
+                    </div>
+                  </div>
                 ) : (
-                  <time className="entry-date">{formatDate(entry.createdAt)}</time>
+                  <p className="entry-body">{entry.content}</p>
                 )}
-                <p className="entry-body">{entry.content}</p>
+
                 {entry.aiComment && (
                   <blockquote className="ai-comment">
                     <span>AIからのひとこと</span>
